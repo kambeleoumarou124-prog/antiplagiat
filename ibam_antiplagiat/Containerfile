@@ -1,0 +1,33 @@
+# Containerfile pour le déploiement sur Fedora
+FROM registry.fedoraproject.org/fedora:40
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE config.settings.production
+
+# Installer les dépendances système
+RUN dnf install -y python3.11 python3.11-devel python3-pip \
+    postgresql-devel gcc gcc-c++ make \
+    libmagic libmagic-devel poppler-utils \
+    && dnf clean all
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Installer les dépendances Python
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Télécharger le modèle spaCy (on le fait ici pour le cacher dans l'image)
+RUN python -m spacy download fr_core_news_md && \
+    python -m nltk.downloader stopwords punkt
+
+# Copier le code source
+COPY . /app/
+
+# Port exposé pour Daphne
+EXPOSE 8000
+
+# Lancer Daphne (serveur ASGI pour HTTP + WebSocket)
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "config.asgi:application"]
