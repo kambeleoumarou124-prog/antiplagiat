@@ -13,7 +13,9 @@ export default function MesRapportsPage() {
     queryKey: ["my_rapports"],
     queryFn: async () => {
       const res = await rapportsApi.lister();
-      return res.data;
+      // DRF retourne { results: [], count: ... } pour les réponses paginées
+      const data = (res.data as any);
+      return Array.isArray(data) ? data : (data?.results || []);
     },
   });
 

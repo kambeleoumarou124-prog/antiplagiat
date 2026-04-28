@@ -18,7 +18,10 @@ export default function RapportsAValiderPage() {
     queryKey: ["rapports_to_validate_dir"],
     queryFn: async () => {
       const res = await rapportsApi.lister();
-      return res.data.filter(r => r.statut === "DECISION_CHEF"); // Assume the Chef has finished his part
+      // DRF retourne { results: [], count: ... } pour les réponses paginées
+      const data = (res.data as any);
+      const items = Array.isArray(data) ? data : (data?.results || []);
+      return items.filter((r: RapportStage) => r.statut === "DECISION_CHEF"); // Assume the Chef has finished his part
     },
   });
 

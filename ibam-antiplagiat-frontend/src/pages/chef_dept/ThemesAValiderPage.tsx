@@ -14,7 +14,10 @@ export default function ThemesAValiderPage() {
     queryKey: ["themes_to_validate"],
     queryFn: async () => {
       const res = await themesApi.lister();
-      return res.data.filter(t => t.statut === "EN_ATTENTE");
+      // DRF retourne { results: [], count: ... } pour les réponses paginées
+      const data = (res.data as any);
+      const items = Array.isArray(data) ? data : (data?.results || []);
+      return items.filter((t: ThemeStage) => t.statut === "EN_ATTENTE");
     },
   });
 

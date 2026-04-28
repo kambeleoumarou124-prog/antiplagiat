@@ -5,8 +5,22 @@ import { StatCard } from "@/components/ui/StatCard";
 import { FileText, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
 export default function DashboardChefPage() {
-  const { data: themes } = useQuery({ queryKey: ["themes"], queryFn: () => themesApi.lister().then(res => res.data) });
-  const { data: rapports } = useQuery({ queryKey: ["rapports"], queryFn: () => rapportsApi.lister().then(res => res.data) });
+  const { data: themes } = useQuery({
+    queryKey: ["themes"],
+    queryFn: async () => {
+      const res = await themesApi.lister();
+      const data = (res.data as any);
+      return Array.isArray(data) ? data : (data?.results || []);
+    }
+  });
+  const { data: rapports } = useQuery({
+    queryKey: ["rapports"],
+    queryFn: async () => {
+      const res = await rapportsApi.lister();
+      const data = (res.data as any);
+      return Array.isArray(data) ? data : (data?.results || []);
+    }
+  });
 
   const themesEnAttente = themes?.filter(t => t.statut === "EN_ATTENTE").length || 0;
   const rapportsAAnalyser = rapports?.filter(r => r.statut === "SOUMIS").length || 0;

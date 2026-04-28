@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { themesApi } from "@/api/themes.api";
+import { sessionsApi } from "@/api/sessions.api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,7 +33,20 @@ export default function SoumettreThemePage() {
   const navigate = useNavigate();
   const [uploadPct, setUploadPct] = useState(0);
   const [autoAnalyseResult, setAutoAnalyseResult] = useState<any>(null);
-  
+
+  // Récupérer la session de thème ouverte
+  const { data: sessions } = useQuery({
+    queryKey: ["sessions_theme"],
+    queryFn: async () => {
+      const res = await sessionsApi.lister();
+      const data = (res.data as any);
+      const items = Array.isArray(data) ? data : (data?.results || []);
+      return items.filter((s: any) => s.type === "SESSION_THEME" && s.statut === "OUVERTE");
+    },
+  });
+
+  const sessionOuverte = sessions && sessions.length > 0 ? sessions[0] : null;
+
   const form = useForm<z.infer<typeof themeSchema>>({
     resolver: zodResolver(themeSchema),
     defaultValues: { intitule: "" }
@@ -50,8 +64,11 @@ export default function SoumettreThemePage() {
   });
 
   const onSubmit = (values: z.infer<typeof themeSchema>) => {
-    // 1 correspondrait à la session ouverte. En vrai, à sélectionner ou injecter
-    soumissionMutation.mutate({ session: 1, intitule: values.intitule, fichier: values.fichier[0] });
+    if (!sessionOuverte) {
+      toast.error("Aucune session de soumission de thème n'est ouverte");
+      return;
+    }
+    soumissionMutation.mutate({ session: sessionOuverte.id, intitule: values.intitule, fichier: values.fichier[0] });
   };
 
   return (

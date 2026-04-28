@@ -15,7 +15,9 @@ export default function MesThemesPage() {
       // Pour l'instant on mock en appelant la liste globale car on n'a pas la route /etudiant/me/
       // En vrai ce serait themesApi.getAll() avec un filtre
       const res = await themesApi.lister();
-      return res.data;
+      // DRF retourne { results: [], count: ... } pour les réponses paginées
+      const data = (res.data as any);
+      return Array.isArray(data) ? data : (data?.results || []);
     },
   });
 
