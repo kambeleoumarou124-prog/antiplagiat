@@ -21,10 +21,15 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       isAuthenticated: false,
 
-      setUser: (user) => set({ user }),
+      setUser: (user) => {
+        console.log('Setting user:', user);
+        set({ user });
+      },
 
-      setTokens: (access, refresh) =>
-        set({ accessToken: access, refreshToken: refresh, isAuthenticated: true }),
+      setTokens: (access, refresh) => {
+        console.log('Setting tokens:', { access: access?.substring(0, 20) + '...', refresh: refresh?.substring(0, 20) + '...' });
+        set({ accessToken: access, refreshToken: refresh, isAuthenticated: true });
+      },
 
       logout: () =>
         set({ user: null, accessToken: null, refreshToken: null,

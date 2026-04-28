@@ -9,7 +9,6 @@ export interface User {
   actif: boolean;
   eligibilite_rapport: boolean;
   date_creation: string;   // ISO 8601
-  date_modification: string;
 }
 
 export interface AuthTokens {

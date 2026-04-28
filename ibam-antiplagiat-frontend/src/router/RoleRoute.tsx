@@ -6,10 +6,16 @@ export default function RoleRoute({ roles, children }: {
   children?: React.ReactNode;
 }) {
   const user = useAuthStore((s) => s.user);
+  console.log('RoleRoute - user:', user);
+  console.log('RoleRoute - roles:', roles);
   
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) {
+    console.log('RoleRoute - no user, redirecting to /login');
+    return <Navigate to="/login" replace />;
+  }
   
   if (roles && !roles.includes(user.role)) {
+    console.log('RoleRoute - user role', user.role, 'not in', roles, ', redirecting to /');
     return <Navigate to="/" replace />;
   }
   
@@ -20,7 +26,9 @@ export default function RoleRoute({ roles, children }: {
       DIR_ADJOINT: "/directeur/dashboard",
       ADMIN:       "/admin/dashboard",
     };
-    return <Navigate to={map[user.role] ?? "/login"} replace />;
+    const target = map[user.role] ?? "/login";
+    console.log('RoleRoute - redirecting to:', target);
+    return <Navigate to={target} replace />;
   }
   
   return <>{children}</>;

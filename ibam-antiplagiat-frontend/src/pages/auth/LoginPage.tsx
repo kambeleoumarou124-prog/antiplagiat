@@ -22,7 +22,6 @@ export default function LoginPage() {
   const setTokens = useAuthStore((s) => s.setTokens);
   const setUser = useAuthStore((s) => s.setUser);
   const [errorMsg, setErrorMsg] = useState("");
-  const [selectedRole, setSelectedRole] = useState<"etudiant" | "chef" | "directeur" | "admin">("etudiant");
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -31,18 +30,28 @@ export default function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: authApi.login,
-    onSuccess: async (res) => {
-      setTokens(res.data.access, res.data.refresh);
-      try {
-        // Le backend renvoie juste les tokens, on doit chercher l'utilisateur
-        const meRes = await authApi.getMe();
-        setUser(meRes.data);
+    onSuccess: (res) => {
+      console.log('Login response:', res);
+      console.log('Response data:', res.data);
+      console.log('Access token:', res.data?.access);
+      console.log('Refresh token:', res.data?.refresh);
+      console.log('User:', res.data?.user);
+      
+      if (res.data?.access && res.data?.refresh) {
+        setTokens(res.data.access, res.data.refresh);
+        if (res.data?.user) {
+          setUser(res.data.user);
+        }
+        console.log('Tokens set, navigating to /');
         navigate("/");
-      } catch (err) {
-        setErrorMsg("Erreur lors du chargement de votre profil.");
+      } else {
+        console.error('Invalid response structure:', res);
+        setErrorMsg("Réponse serveur invalide");
       }
     },
     onError: (error: any) => {
+      console.error('Login error:', error);
+      console.error('Error response:', error.response);
       const status = error.response?.status;
       if (status === 401) {
         setErrorMsg("Email ou mot de passe incorrect");
@@ -72,7 +81,7 @@ export default function LoginPage() {
 
       <div className="text-center mb-8">
         <h2 className="text-3xl font-serif text-[#1A3A5C] tracking-tight mb-2">Connexion</h2>
-        <p className="text-slate-500 text-sm">Licence 3 Informatique — Promotion 2025</p>
+        <p className="text-slate-500 text-sm">Promotion 2025-2026</p>
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -144,37 +153,6 @@ export default function LoginPage() {
         ) : "Se connecter"}
       </Button>
       </form>
-
-      <div className="mt-8 pt-6 border-t border-slate-200">
-        <p className="text-xs text-muted-foreground text-center mb-4 font-medium">Connectez-vous en tant que :</p>
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { id: "etudiant", label: "Étudiant" },
-            { id: "chef", label: "Chef de Département" },
-            { id: "directeur", label: "Directeur Adjoint" },
-            { id: "admin", label: "Administrateur" },
-          ].map((role) => (
-            <button
-              key={role.id}
-              type="button"
-              onClick={() => setSelectedRole(role.id as any)}
-              className={`px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                selectedRole === role.id
-                  ? "bg-[#1A3A5C] border-2 border-[#1A3A5C] text-white shadow-md"
-                  : "bg-white border-2 border-slate-200 text-slate-600 hover:border-[#1A3A5C] hover:text-[#1A3A5C]"
-              }`}
-            >
-              {role.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex justify-center mt-4">
-        <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
     </div>
   );
 }

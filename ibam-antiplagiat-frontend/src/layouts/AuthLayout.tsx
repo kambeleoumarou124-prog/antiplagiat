@@ -19,10 +19,6 @@ export default function AuthLayout() {
       <div className="w-full max-w-md z-10 bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 p-8">
         <Outlet />
       </div>
-      
-      <div className="absolute bottom-8 text-white/30 text-xs font-mono tracking-widest">
-        SFD-IBAM-ANTIPLAGIAT-L3-2025
-      </div>
     </div>
   );
 }
