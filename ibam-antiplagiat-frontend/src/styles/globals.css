@@ -42,7 +42,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/20;
+    @apply bg-background text-foreground font-sans antialiased;
     background-image: radial-gradient(circle at 50% -20%, #f1f5f9, #F8FAFC);
     background-attachment: fixed;
   }
