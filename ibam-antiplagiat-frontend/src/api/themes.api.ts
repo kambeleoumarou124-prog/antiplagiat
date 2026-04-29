@@ -24,6 +24,27 @@ export const themesApi = {
     return uploadClient(onProgress).post<AutoAnalyseResult>("/themes/auto-analyse/", fd);
   },
 
+  autoAnalyseTheme: (id: number, fichier?: File, onProgress?: (pct: number) => void) => {
+    if (fichier) {
+      const fd = new FormData();
+      fd.append("fichier", fichier);
+      return uploadClient(onProgress).post<AutoAnalyseResult>(`/themes/${id}/auto-analyser/`, fd);
+    }
+    return apiClient.post<AutoAnalyseResult>(`/themes/${id}/auto-analyser/`);
+  },
+
+  autoAnalyseStandalone: (fichier: File, docType: string, titre: string, onProgress?: (pct: number) => void) => {
+    const fd = new FormData();
+    fd.append("fichier", fichier);
+    fd.append("doc_type", docType);
+    fd.append("titre", titre);
+    return uploadClient(onProgress).post<AutoAnalyseResult>("/themes/auto-analyse/", fd);
+  },
+
+  telechargerFichier: (id: number) => {
+    return apiClient.get(`/themes/${id}/download/`, { responseType: 'blob' });
+  },
+
   resubmettre: (id: number, payload: SoumettreThemePayload) => {
     const fd = new FormData();
     fd.append("intitule", payload.intitule);

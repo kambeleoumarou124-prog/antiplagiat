@@ -26,6 +26,9 @@ class RapportStage(models.Model):
                                                 related_name="rapports")
     session                 = models.ForeignKey("sessions_academiques.SessionAcademique",
                                                 on_delete=models.CASCADE)
+    theme                   = models.ForeignKey("themes.ThemeStage",
+                                                on_delete=models.CASCADE,
+                                                related_name="rapports")
     titre                   = models.CharField(max_length=300)
     fichier_path            = models.CharField(max_length=500)
     fichier_anonymise_path  = models.CharField(max_length=500)

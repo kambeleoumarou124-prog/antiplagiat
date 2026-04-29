@@ -1,0 +1,148 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.0, pytest-9.0.3, pluggy-1.6.0 -- /home/kambeleoumarou/Dev/projets-personnels/ibam_antiplagiat/venv/bin/python3
+cachedir: .pytest_cache
+django: version: 6.0.4, settings: config.settings.development (from ini)
+rootdir: /home/kambeleoumarou/Dev/projets-personnels/ibam_antiplagiat
+configfile: pytest.ini
+plugins: anyio-4.13.0, mock-3.15.1, Faker-40.15.0, asyncio-1.3.0, cov-7.1.0, django-4.12.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 37 items
+
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_extrait_texte_pdf PASSED [  2%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_extrait_texte_docx PASSED [  5%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_preprocesseur_lemmatise PASSED [  8%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_tfidf_retourne_matrice_non_vide PASSED [ 10%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_similarite_cosinus_document_identique PASSED [ 13%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_similarite_cosinus_document_different PASSED [ 16%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_seuil_minimal_0_60 PASSED [ 18%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_calcul_taux_global PASSED [ 21%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_niveau_alerte_selon_seuils PASSED [ 24%]
+tests/test_analyse_themes_rapports.py::TestBlocAPipelineNLP::test_pipeline_complet_retourne_json_valide PASSED [ 27%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_auto_analyse_theme_etudiant_non_persistee PASSED [ 29%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_analyse_officielle_theme_chef_dept FAILED [ 32%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_analyse_theme_acces_refuse_etudiant_officiel PASSED [ 35%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_analyse_theme_session_fermee_bloquee PASSED [ 37%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_decision_theme_accepte PASSED [ 40%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_decision_theme_refuse PASSED [ 43%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_decision_theme_a_reformuler PASSED [ 45%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_decision_theme_sans_analyse_bloquee PASSED [ 48%]
+tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_alerte_critique_theme_notifie_chef_et_dir PASSED [ 51%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_auto_analyse_rapport_etudiant_non_persistee PASSED [ 54%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_analyse_officielle_rapport_chef_dept PASSED [ 56%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_analyse_rapport_dir_adjoint_independante PASSED [ 59%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_decision_chef_rapport_valide PASSED [ 62%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_decision_chef_rapport_refuse PASSED [ 64%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_decision_finale_valide_def PASSED [ 67%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_decision_finale_refuse_def PASSED [ 70%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_decision_finale_en_revision PASSED [ 72%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_rapport_etudiant_non_eligible_bloque PASSED [ 75%]
+tests/test_analyse_themes_rapports.py::TestBlocCAnalyseRapports::test_alerte_critique_rapport_notifie_chef_et_dir PASSED [ 78%]
+tests/test_analyse_themes_rapports.py::TestBlocDSecurite::test_rejet_fichier_mime_invalide PASSED [ 81%]
+tests/test_analyse_themes_rapports.py::TestBlocDSecurite::test_rejet_fichier_trop_volumineux_theme PASSED [ 83%]
+tests/test_analyse_themes_rapports.py::TestBlocDSecurite::test_rejet_fichier_trop_volumineux_rapport PASSED [ 86%]
+tests/test_analyse_themes_rapports.py::TestBlocDSecurite::test_stockage_anonymise_rapport PASSED [ 89%]
+tests/test_analyse_themes_rapports.py::TestBlocDSecurite::test_pipeline_fichier_corrompu PASSED [ 91%]
+tests/test_analyse_themes_rapports.py::TestBlocERapportPDF::test_rapport_pdf_contient_sections_obligatoires PASSED [ 94%]
+tests/test_analyse_themes_rapports.py::TestBlocERapportPDF::test_rapport_pdf_conclusion_automatique_critique PASSED [ 97%]
+tests/test_analyse_themes_rapports.py::TestBlocERapportPDF::test_rapport_pdf_conclusion_automatique_vert PASSED [100%]
+
+=================================== FAILURES ===================================
+________ TestBlocBAnalyseThemes.test_analyse_officielle_theme_chef_dept ________
+tests/test_analyse_themes_rapports.py:121: in test_analyse_officielle_theme_chef_dept
+    assert analyse.rapport_pdf_path != ""
+E   AssertionError: assert '' != ''
+E    +  where '' = <Analyse: Analyse 1 - 12.4% (VERT)>.rapport_pdf_path
+=============================== warnings summary ===============================
+venv/lib64/python3.14/site-packages/PyPDF2/__init__.py:21
+  /home/kambeleoumarou/Dev/projets-personnels/ibam_antiplagiat/venv/lib64/python3.14/site-packages/PyPDF2/__init__.py:21: DeprecationWarning: PyPDF2 is deprecated. Please move to the pypdf library instead.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.14.0-final-0 ________________
+
+Name                                                    Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------------------
+apps/__init__.py                                            0      0   100%
+apps/administration/__init__.py                             0      0   100%
+apps/administration/apps.py                                 5      0   100%
+apps/administration/exceptions.py                          51      0   100%
+apps/administration/migrations/0001_initial.py              5      0   100%
+apps/administration/migrations/0002_initial.py              7      0   100%
+apps/administration/migrations/__init__.py                  0      0   100%
+apps/administration/models.py                              50      4    92%   19, 34, 52, 71
+apps/administration/serializers.py                         23      1    96%   14
+apps/administration/urls.py                                 8      0   100%
+apps/administration/views.py                               27      1    96%   33
+apps/analyses/__init__.py                                   0      0   100%
+apps/analyses/apps.py                                       5      0   100%
+apps/analyses/migrations/0001_initial.py                    5      0   100%
+apps/analyses/migrations/0002_initial.py                    7      0   100%
+apps/analyses/migrations/__init__.py                        0      0   100%
+apps/analyses/models.py                                    30      0   100%
+apps/analyses/serializers.py                                6      0   100%
+apps/analyses/urls.py                                       6      0   100%
+apps/analyses/views.py                                     18      4    78%   15, 19-21
+apps/authentication/apps.py                                 5      0   100%
+apps/authentication/migrations/0001_initial.py              5      0   100%
+apps/authentication/migrations/__init__.py                  0      0   100%
+apps/authentication/models.py                              47     10    79%   14, 22-31, 58
+apps/authentication/permissions.py                         16      2    88%   20, 25
+apps/authentication/serializers.py                         37     21    43%   18-45
+apps/authentication/urls.py                                 4      0   100%
+apps/authentication/views.py                               39     23    41%   14-15, 19-47, 59-68
+apps/notifications/__init__.py                              0      0   100%
+apps/notifications/apps.py                                  5      0   100%
+apps/notifications/consumers.py                            16     16     0%   1-19
+apps/notifications/migrations/0001_initial.py               7      0   100%
+apps/notifications/migrations/__init__.py                   0      0   100%
+apps/notifications/models.py                               18      1    94%   27
+apps/notifications/routing.py                               3      3     0%   1-4
+apps/notifications/serializers.py                           6      0   100%
+apps/notifications/urls.py                                  6      0   100%
+apps/notifications/views.py                                25      9    64%   13, 17-20, 24-25, 29-30
+apps/rapports/__init__.py                                   0      0   100%
+apps/rapports/apps.py                                       5      0   100%
+apps/rapports/migrations/0001_initial.py                    7      0   100%
+apps/rapports/migrations/0002_add_theme_to_rapport.py       5      0   100%
+apps/rapports/migrations/__init__.py                        0      0   100%
+apps/rapports/models.py                                    41      1    98%   64
+apps/rapports/serializers.py                               21      2    90%   13, 20
+apps/rapports/services.py                                   8      0   100%
+apps/rapports/urls.py                                       6      0   100%
+apps/rapports/views.py                                    110     10    91%   22, 58-59, 81-82, 87-88, 123, 136, 140
+apps/sessions_academiques/__init__.py                       0      0   100%
+apps/sessions_academiques/apps.py                           5      0   100%
+apps/sessions_academiques/migrations/0001_initial.py        7      0   100%
+apps/sessions_academiques/migrations/__init__.py            0      0   100%
+apps/sessions_academiques/models.py                        22      1    95%   30
+apps/sessions_academiques/serializers.py                    7      0   100%
+apps/sessions_academiques/services.py                      44     44     0%   1-84
+apps/sessions_academiques/urls.py                           6      0   100%
+apps/sessions_academiques/views.py                         16      5    69%   13-15, 18-20
+apps/themes/__init__.py                                     0      0   100%
+apps/themes/apps.py                                         5      0   100%
+apps/themes/migrations/0001_initial.py                      7      0   100%
+apps/themes/migrations/__init__.py                          0      0   100%
+apps/themes/models.py                                      26      1    96%   40
+apps/themes/serializers.py                                 39     16    59%   12-18, 21-24, 45-51
+apps/themes/services.py                                    26      6    77%   12-22, 29
+apps/themes/urls.py                                         6      0   100%
+apps/themes/views.py                                       85     12    86%   18, 21-23, 26-27, 41, 67, 83-84, 109, 113
+nlp/__init__.py                                             0      0   100%
+nlp/comparator.py                                          21      2    90%   9, 36
+nlp/extractor.py                                           21      2    90%   6, 24
+nlp/pipeline.py                                            39      5    87%   31, 60-77
+nlp/preprocessor.py                                        15      3    80%   5-6, 12
+nlp/report_generator.py                                    26      2    92%   24-25
+nlp/vectorizer.py                                          12      1    92%   15
+security/__init__.py                                        0      0   100%
+security/file_validator.py                                 12     12     0%   1-18
+security/sanitizer.py                                       5      5     0%   1-7
+security/signature_service.py                              14     14     0%   1-27
+-------------------------------------------------------------------------------------
+TOTAL                                                    1161    239    79%
+Coverage HTML written to dir htmlcov
+=========================== short test summary info ============================
+FAILED tests/test_analyse_themes_rapports.py::TestBlocBAnalyseThemes::test_analyse_officielle_theme_chef_dept
+=================== 1 failed, 36 passed, 1 warning in 23.47s ===================

@@ -1,10 +1,14 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth.store";
 import { useWebSocket } from "@/hooks/useWebSocket";
-import { LayoutDashboard, LogOut, Settings, Bell } from "lucide-react";
+import { 
+  LayoutDashboard, FileText, FileCheck, BarChart3, LogOut, 
+  Bell, ChevronRight, ChevronDown, ShieldCheck, Users, 
+  Settings, FileText as FileAudit, TrendingUp, Clock
+} from "lucide-react";
 import { useNotificationsStore } from "@/stores/notifications.store";
 
-const MenuLink = ({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) => {
+const MenuLink = ({ to, icon, label, badge }: { to: string; icon: React.ReactNode; label: string; badge?: number }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isActive = location.pathname.startsWith(to);
@@ -12,14 +16,17 @@ const MenuLink = ({ to, icon, label }: { to: string; icon: React.ReactNode; labe
   return (
     <button
       onClick={() => navigate(to)}
-      className={`w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
         isActive
-          ? "bg-primary text-white shadow-lg shadow-primary/30 font-medium border-l-4 border-l-accent"
-          : "hover:bg-white/5 hover:text-white text-slate-300 border-l-4 border-l-transparent"
+          ? "bg-[#E8A020] text-[#0D1F33]"
+          : "hover:bg-white/10 text-white/80"
       }`}
     >
       {icon}
-      {label}
+      <span className="flex-1 text-left">{label}</span>
+      {badge !== undefined && badge > 0 && (
+        <span className="bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">{badge}</span>
+      )}
     </button>
   );
 };
@@ -31,101 +38,143 @@ export default function AppLayout() {
   const location = useLocation();
   const unreadCount = useNotificationsStore((s) => s.unreadCount);
 
+  const getInitials = (prenom?: string, nom?: string) => {
+    if (!prenom || !nom) return "??";
+    return (prenom[0] + nom[0]).toUpperCase();
+  };
+
+  const getRoleLabel = (role?: string) => {
+    const labels: Record<string, string> = {
+      "ETUDIANT": "Étudiant",
+      "CHEF_DEPT": "Chef de Département",
+      "DIR_ADJOINT": "Directeur Adjoint",
+      "ADMIN": "Administrateur",
+    };
+    return labels[role || ""] || role || "";
+  };
+
   return (
-    <div className="min-h-screen flex bg-background selection:bg-primary/20">
+    <div className="min-h-screen flex bg-[#F8FAFC]">
       {/* Sidebar */}
-      <aside className="w-72 bg-primary-dark text-slate-300 flex flex-col shadow-2xl z-20 transition-all duration-300 relative border-r border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/20 pointer-events-none"></div>
-        <div className="h-20 flex items-center px-6 border-b border-white/10 relative z-10 bg-gradient-to-r from-primary-dark to-primary">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-accent-dark flex items-center justify-center mr-3 shadow-lg shadow-accent/20">
-            <span className="font-serif font-bold text-white text-lg tracking-wider">IB</span>
-          </div>
-          <div>
-            <h1 className="font-serif text-white text-lg font-bold tracking-wide">IBAM</h1>
-            <p className="text-[10px] text-accent font-mono uppercase tracking-widest">Anti-Plagiat</p>
+      <aside className="w-[280px] bg-gradient-to-b from-[#0D1F33] to-[#1A3A5C] text-white fixed h-screen overflow-y-auto z-20">
+        <div className="p-6 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-[#E8A020] rounded-xl flex items-center justify-center">
+              <ShieldCheck className="w-6 h-6 text-[#0D1F33]" />
+            </div>
+            <div>
+              <h3 className="font-serif text-white text-lg font-bold">IBAM</h3>
+              <span className="text-xs text-white/70 uppercase tracking-wider">Anti-Plagiat</span>
+            </div>
           </div>
         </div>
-        
-        <nav className="flex-1 px-4 py-8 space-y-2 relative z-10 overflow-y-auto">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4 px-4">Menu Principal</div>
-          
+
+        <nav className="p-3">
           {user?.role === "ETUDIANT" && (
             <>
-              <MenuLink to="/etudiant/dashboard" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Tableau de bord" />
-              <MenuLink to="/etudiant/themes" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Mes Thèmes" />
-              <MenuLink to="/etudiant/rapports" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Mes Rapports" />
+              <div className="text-xs text-white/40 uppercase tracking-widest px-3 mb-3 mt-4 font-semibold">MON ESPACE</div>
+              <MenuLink to="/etudiant/dashboard" icon={<LayoutDashboard className="w-5 h-5" />} label="Tableau de bord" />
+              <MenuLink to="/etudiant/themes" icon={<FileText className="w-5 h-5" />} label="Mes thèmes" />
+              <MenuLink to="/etudiant/themes/nouveau" icon={<FileCheck className="w-5 h-5" />} label="Soumettre un thème" />
+              <MenuLink to="/etudiant/rapports" icon={<FileText className="w-5 h-5" />} label="Mes rapports" />
+              <MenuLink to="/etudiant/rapports/deposer" icon={<ChevronDown className="w-5 h-5" />} label="Déposer un rapport" />
+              <div className="text-xs text-white/40 uppercase tracking-widest px-3 mb-3 mt-6 font-semibold">OUTILS</div>
+              <MenuLink to="/etudiant/auto-analyse" icon={<Clock className="w-5 h-5" />} label="Auto-analyse" />
             </>
           )}
 
           {user?.role === "CHEF_DEPT" && (
             <>
-              <MenuLink to="/chef/dashboard" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Tableau de bord" />
-              <MenuLink to="/chef/themes" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Thèmes à valider" />
-              <MenuLink to="/chef/rapports" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Rapports à analyser" />
+              <div className="text-xs text-white/50 uppercase tracking-widest px-3 mb-2 mt-4">Menu Principal</div>
+              <MenuLink to="/chef/dashboard" icon={<LayoutDashboard className="w-5 h-5" />} label="Tableau de bord" />
+              <div className="text-xs text-white/50 uppercase tracking-widest px-3 mb-2 mt-6">Validation</div>
+              <MenuLink to="/chef/themes" icon={<FileText className="w-5 h-5" />} label="Thèmes à valider" badge={3} />
+              <MenuLink to="/chef/rapports-a-analyser" icon={<FileCheck className="w-5 h-5" />} label="Rapports à analyser" badge={5} />
+              <div className="text-xs text-white/50 uppercase tracking-widest px-3 mb-2 mt-6">Historique</div>
+              <MenuLink to="/chef/historique-analyses" icon={<BarChart3 className="w-5 h-5" />} label="Historique analyses" />
             </>
           )}
 
           {user?.role === "DIR_ADJOINT" && (
             <>
-              <MenuLink to="/directeur/dashboard" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Tableau de bord" />
-              <MenuLink to="/directeur/sessions" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Sessions" />
-              <MenuLink to="/directeur/rapports" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Validation Rapports" />
+              <div className="text-xs text-white/50 uppercase tracking-widest px-3 mb-2 mt-4">Menu Principal</div>
+              <MenuLink to="/directeur/dashboard" icon={<LayoutDashboard className="w-5 h-5" />} label="Tableau de bord" />
+              <div className="text-xs text-white/50 uppercase tracking-widest px-3 mb-2 mt-6">Gestion</div>
+              <MenuLink to="/directeur/sessions" icon={<LayoutDashboard className="w-5 h-5" />} label="Sessions" />
+              <MenuLink to="/directeur/rapports" icon={<FileCheck className="w-5 h-5" />} label="Validation Rapports" />
             </>
           )}
 
           {user?.role === "ADMIN" && (
             <>
-              <MenuLink to="/admin/dashboard" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Tableau de bord" />
-              <MenuLink to="/admin/utilisateurs" icon={<LayoutDashboard className="w-5 h-5 mr-3" />} label="Utilisateurs" />
+              <div className="text-xs text-white/50 uppercase tracking-widest px-3 mb-2 mt-4">Menu Principal</div>
+              <MenuLink to="/admin/dashboard" icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" />
+              <MenuLink to="/admin/utilisateurs" icon={<Users className="w-5 h-5" />} label="Utilisateurs" badge={24} />
+              <MenuLink to="/admin/seuils" icon={<Settings className="w-5 h-5" />} label="Configuration seuils" />
+              <MenuLink to="/admin/audit" icon={<FileAudit className="w-5 h-5" />} label="Journal d'audit" />
+              <MenuLink to="/admin/statistiques" icon={<TrendingUp className="w-5 h-5" />} label="Statistiques" />
             </>
           )}
         </nav>
 
-        <div className="p-4 border-t border-white/10 relative z-10 bg-black/10">
-          <div className="flex items-center px-4 py-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold border border-white/20 shadow-inner">
-              {user?.prenom?.[0] || "?"}
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 bg-black/10">
+          <div className="flex items-center gap-3 p-3 bg-white/10 rounded-lg">
+            <div className="w-10 h-10 bg-[#E8A020] rounded-full flex items-center justify-center font-semibold text-[#0D1F33]">
+              {getInitials(user?.prenom, user?.nom)}
             </div>
-            <div className="ml-3 overflow-hidden">
-              <p className="text-sm text-white font-medium truncate">{user?.prenom} {user?.nom}</p>
-              <p className="text-xs text-slate-400 truncate">{user?.role}</p>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium text-white truncate">{user?.prenom} {user?.nom}</div>
+              <div className="text-xs text-white/60 truncate">{getRoleLabel(user?.role)}</div>
             </div>
+            <button 
+              onClick={() => useAuthStore.getState().logout()}
+              className="text-white/60 hover:text-white transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
-          <button 
-            onClick={() => useAuthStore.getState().logout()}
-            className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors"
-          >
-            <LogOut className="w-4 h-4 mr-3" />
-            Déconnexion
-          </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-        {/* Subtle background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-primary-light/5 blur-[100px] pointer-events-none rounded-full"></div>
-
-        <header className="h-20 glass border-b border-border/50 flex items-center justify-between px-8 z-10 sticky top-0">
-          <h2 className="font-serif text-2xl font-bold text-primary tracking-tight">Vue d'ensemble</h2>
-          
-          <div className="flex items-center space-x-3">
-            <button className="relative p-2.5 text-slate-500 hover:text-primary transition-colors hover:bg-slate-100 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20">
-              <Bell className="w-5 h-5" />
+      <div className="flex-1 ml-[280px]">
+        {/* Header */}
+        <header className="bg-white border-b border-[#E2E8F0] px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-[#64748B]">Accueil</span>
+            <ChevronRight className="w-4 h-4 text-[#E2E8F0]" />
+            <span className="text-[#1E293B] font-medium">
+              {location.pathname.includes("dashboard") && "Dashboard"}
+              {location.pathname.includes("utilisateurs") && "Gestion des utilisateurs"}
+              {location.pathname.includes("seuils") && "Configuration des seuils"}
+              {location.pathname.includes("audit") && "Journal d'audit"}
+              {location.pathname.includes("statistiques") && "Statistiques"}
+              {location.pathname.includes("themes") && "Thèmes à valider"}
+              {location.pathname.includes("rapports") && "Rapports à analyser"}
+              {location.pathname.includes("analyses") && "Historique analyses"}
+              {location.pathname.includes("sessions") && "Sessions"}
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="relative w-10 h-10 bg-[#F8FAFC] rounded-lg border border-[#E2E8F0] flex items-center justify-center hover:bg-[#E2E8F0] transition-colors">
+              <Bell className="w-5 h-5 text-[#64748B]" />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-accent rounded-full border-2 border-white animate-pulse"></span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
               )}
             </button>
-            <button className="p-2.5 text-slate-500 hover:text-primary transition-colors hover:bg-slate-100 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20">
-              <Settings className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer hover:bg-[#F8FAFC] transition-colors">
+              <div className="w-9 h-9 bg-[#1A3A5C] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                {getInitials(user?.prenom, user?.nom)}
+              </div>
+              <span className="text-sm">{user?.prenom} {user?.nom}</span>
+              <ChevronDown className="w-4 h-4 text-[#64748B]" />
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-8 relative z-0">
-          <div className="max-w-7xl mx-auto animate-in">
-            <Outlet />
-          </div>
+        {/* Page Content */}
+        <main className="p-8">
+          <Outlet />
         </main>
       </div>
     </div>

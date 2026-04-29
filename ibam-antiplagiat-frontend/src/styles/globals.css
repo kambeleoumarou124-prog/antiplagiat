@@ -7,33 +7,41 @@
 @layer base {
   :root {
     /* Primaires — identité IBAM */
-    --color-primary:       #1A3A5C;   /* Bleu marine IBAM */
-    --color-primary-light: #2E6DA4;   /* Bleu clair */
-    --color-primary-dark:  #0D1F33;   /* Bleu très sombre */
+    --color-primary: #1A3A5C;
+    /* Bleu marine IBAM */
+    --color-primary-light: #2E6DA4;
+    /* Bleu clair */
+    --color-primary-dark: #0D1F33;
+    /* Bleu très sombre */
 
     /* Accents */
-    --color-accent:        #E8A020;   /* Or/amber — couleurs du Burkina */
-    --color-accent-light:  #F5C84A;
-    --color-accent-dark:   #B87B10;
+    --color-accent: #E8A020;
+    /* Or/amber — couleurs du Burkina */
+    --color-accent-light: #F5C84A;
+    --color-accent-dark: #B87B10;
 
     /* Niveaux plagiat */
-    --color-plagiat-vert:     #22C55E;  /* 0–15% — original */
-    --color-plagiat-orange:   #F97316;  /* 16–30% — modéré */
-    --color-plagiat-rouge:    #EF4444;  /* 31–50% — fort */
-    --color-plagiat-critique: #7F1D1D;  /* >50% — critique */
+    --color-plagiat-vert: #22C55E;
+    /* 0–15% — original */
+    --color-plagiat-orange: #F97316;
+    /* 16–30% — modéré */
+    --color-plagiat-rouge: #EF4444;
+    /* 31–50% — fort */
+    --color-plagiat-critique: #7F1D1D;
+    /* >50% — critique */
 
     /* Neutres */
-    --color-bg:        #F8FAFC;
-    --color-surface:   #FFFFFF;
-    --color-border:    #E2E8F0;
-    --color-text:      #1E293B;
-    --color-muted:     #64748B;
+    --color-bg: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-border: #E2E8F0;
+    --color-text: #1E293B;
+    --color-muted: #64748B;
 
     /* États */
-    --color-success:   #16A34A;
-    --color-warning:   #D97706;
-    --color-error:     #DC2626;
-    --color-info:      #0284C7;
+    --color-success: #16A34A;
+    --color-warning: #D97706;
+    --color-error: #DC2626;
+    --color-info: #0284C7;
   }
 }
 
@@ -41,15 +49,20 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     background-image: radial-gradient(circle at 50% -20%, #f1f5f9, #F8FAFC);
     background-attachment: fixed;
   }
-  h1, h2 {
+
+  h1,
+  h2 {
     @apply font-serif text-primary tracking-tight;
   }
-  h3, h4 {
+
+  h3,
+  h4 {
     @apply font-sans font-semibold tracking-tight;
   }
 }
@@ -58,20 +71,32 @@
   .glass {
     @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
   }
+
   .glass-dark {
     @apply bg-primary-dark/80 backdrop-blur-md border border-white/10 shadow-2xl;
   }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-dark;
   }
+
   .hover-lift {
     @apply transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-lg;
   }
+
   .animate-in {
     animation: animate-in 0.5s ease-out forwards;
   }
+
   @keyframes animate-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

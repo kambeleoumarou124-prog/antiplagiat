@@ -10,6 +10,11 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 
 AUTH_USER_MODEL = "authentication.User"
 
+# Authentication backend
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -164,9 +169,17 @@ NLP_SEUIL_COSINUS_DEFAULT = 0.60
 
 # CORS
 CORS_ALLOWED_ORIGINS = os.environ.get(
-    "ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+    "ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000").split(",")
 
 # Timezone Burkina Faso
 TIME_ZONE  = "Africa/Ouagadougou"
 USE_TZ     = True
 LANGUAGE_CODE = "fr-fr"
+
+APPEND_SLASH = True
+
+# Langues supportées
+LANGUAGES = [
+    ('fr', 'Français'),
+    ('en', 'English'),
+]

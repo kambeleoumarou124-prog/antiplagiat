@@ -45,4 +45,7 @@ export const rapportsApi = {
 
   downloadSigne: (id: number) =>
     apiClient.get(`/rapports/${id}/download-signe/`, { responseType: "blob" }),
+
+  telechargerFichier: (id: number) =>
+    apiClient.get(`/rapports/${id}/download/`, { responseType: "blob" }),
 };

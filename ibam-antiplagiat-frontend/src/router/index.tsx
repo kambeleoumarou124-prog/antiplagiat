@@ -9,15 +9,21 @@ const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
 // Étudiant
 const DashboardEtudiant = lazy(() => import("@/pages/etudiant/DashboardEtudiant"));
 const MesThemesPage = lazy(() => import("@/pages/etudiant/MesThemesPage"));
+const DetailThemePage = lazy(() => import("@/pages/etudiant/DetailThemePage"));
 const SoumettreThemePage = lazy(() => import("@/pages/etudiant/SoumettreThemePage"));
 const MesRapportsPage = lazy(() => import("@/pages/etudiant/MesRapportsPage"));
+const DetailRapportPage = lazy(() => import("@/pages/etudiant/DetailRapportPage"));
 const DeposerRapportPage = lazy(() => import("@/pages/etudiant/DeposerRapportPage"));
+const AutoAnalysePage = lazy(() => import("@/pages/etudiant/AutoAnalysePage"));
 
 // Chef de département
 const DashboardChefPage = lazy(() => import("@/pages/chef_dept/DashboardChefPage"));
 const ThemesAValiderPage = lazy(() => import("@/pages/chef_dept/ThemesAValiderPage"));
+const ThemeValidationDetailPage = lazy(() => import("@/pages/chef_dept/ThemeValidationDetailPage"));
+const RapportsAAnalyserPage = lazy(() => import("@/pages/chef_dept/RapportsAAnalyserPage"));
 const DetailRapportChefPage = lazy(() => import("@/pages/chef_dept/DetailRapportChefPage"));
 const ResultatAnalysePage = lazy(() => import("@/pages/chef_dept/ResultatAnalysePage"));
+const HistoriqueAnalysesPage = lazy(() => import("@/pages/chef_dept/HistoriqueAnalysesPage"));
 
 // Directeur adjoint
 const DashboardDirPage = lazy(() => import("@/pages/dir_adjoint/DashboardDirPage"));
@@ -27,6 +33,9 @@ const RapportsAValiderPage = lazy(() => import("@/pages/dir_adjoint/RapportsAVal
 // Administrateur
 const DashboardAdminPage = lazy(() => import("@/pages/admin/DashboardAdminPage"));
 const GestionUtilisateursPage = lazy(() => import("@/pages/admin/GestionUtilisateursPage"));
+const ConfigurationSeuilsPage = lazy(() => import("@/pages/admin/ConfigurationSeuilsPage"));
+const JournalAuditPage = lazy(() => import("@/pages/admin/JournalAuditPage"));
+const StatistiquesPage = lazy(() => import("@/pages/admin/StatistiquesPage"));
 
 // Composants factices pour l'instant pour éviter des erreurs lors du rendu sur les pages non implémentées
 const FallbackPage = () => <div className="p-8">Page en construction</div>;
@@ -48,16 +57,22 @@ export const router = createBrowserRouter([
       // Étudiant
       { path: "/etudiant/dashboard",       element: <RoleRoute roles={["ETUDIANT"]}><Suspense><DashboardEtudiant /></Suspense></RoleRoute> },
       { path: "/etudiant/themes",          element: <RoleRoute roles={["ETUDIANT"]}><Suspense><MesThemesPage /></Suspense></RoleRoute> },
+      { path: "/etudiant/themes/:id",     element: <RoleRoute roles={["ETUDIANT"]}><Suspense><DetailThemePage /></Suspense></RoleRoute> },
       { path: "/etudiant/themes/nouveau",  element: <RoleRoute roles={["ETUDIANT"]}><Suspense><SoumettreThemePage /></Suspense></RoleRoute> },
       { path: "/etudiant/rapports",        element: <RoleRoute roles={["ETUDIANT"]}><Suspense><MesRapportsPage /></Suspense></RoleRoute> },
+      { path: "/etudiant/rapports/:id",   element: <RoleRoute roles={["ETUDIANT"]}><Suspense><DetailRapportPage /></Suspense></RoleRoute> },
       { path: "/etudiant/rapports/deposer", element: <RoleRoute roles={["ETUDIANT"]}><Suspense><DeposerRapportPage /></Suspense></RoleRoute> },
+      { path: "/etudiant/auto-analyse",    element: <RoleRoute roles={["ETUDIANT"]}><Suspense><AutoAnalysePage /></Suspense></RoleRoute> },
 
       // Chef
       { path: "/chef/dashboard",   element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><DashboardChefPage /></Suspense></RoleRoute> },
       { path: "/chef/themes",      element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><ThemesAValiderPage /></Suspense></RoleRoute> },
+      { path: "/chef/themes/:id",  element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><ThemeValidationDetailPage /></Suspense></RoleRoute> },
+      { path: "/chef/rapports-a-analyser", element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><RapportsAAnalyserPage /></Suspense></RoleRoute> },
       { path: "/chef/rapports",    element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><DetailRapportChefPage /></Suspense></RoleRoute> }, // Ou une liste de rapports
       { path: "/chef/rapports/:id", element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><DetailRapportChefPage /></Suspense></RoleRoute> },
       { path: "/chef/analyses/:analyseId", element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><ResultatAnalysePage /></Suspense></RoleRoute> },
+      { path: "/chef/historique-analyses", element: <RoleRoute roles={["CHEF_DEPT"]}><Suspense><HistoriqueAnalysesPage /></Suspense></RoleRoute> },
 
       // Dir adjoint
       { path: "/directeur/dashboard",  element: <RoleRoute roles={["DIR_ADJOINT"]}><Suspense><DashboardDirPage /></Suspense></RoleRoute> },
@@ -67,6 +82,9 @@ export const router = createBrowserRouter([
       // Admin
       { path: "/admin/dashboard",     element: <RoleRoute roles={["ADMIN"]}><Suspense><DashboardAdminPage /></Suspense></RoleRoute> },
       { path: "/admin/utilisateurs",  element: <RoleRoute roles={["ADMIN"]}><Suspense><GestionUtilisateursPage /></Suspense></RoleRoute> },
+      { path: "/admin/seuils",        element: <RoleRoute roles={["ADMIN"]}><Suspense><ConfigurationSeuilsPage /></Suspense></RoleRoute> },
+      { path: "/admin/audit",         element: <RoleRoute roles={["ADMIN"]}><Suspense><JournalAuditPage /></Suspense></RoleRoute> },
+      { path: "/admin/statistiques",  element: <RoleRoute roles={["ADMIN"]}><Suspense><StatistiquesPage /></Suspense></RoleRoute> },
 
       { path: "*", element: <Navigate to="/" replace /> },
     ],
